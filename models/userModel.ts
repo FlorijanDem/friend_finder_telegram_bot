@@ -1,7 +1,8 @@
 import { sql } from "../database/dbConnection.ts";
 
 const addToList = async (data) => {
-  const id: number = data.data.userId;
+  console.log(data)
+  const id: number = data.userId;
   if (!id) {
     console.error("Error: userId is required");
     return;
@@ -25,7 +26,7 @@ const addToList = async (data) => {
 };
 
 const getUserInfo = async (data) => {
-  const id: number = data.data.userId;
+  const id: number = data.userId;
   if (!id) {
     console.error("Error: userId is required");
     return;
@@ -39,13 +40,11 @@ const getUserInfo = async (data) => {
   return user;
 };
 
-const addName = async (data) => {
-  const id: number = data.userId;
-  const name: string = data.name;
+const addName = async (userId, name) => {
   const [newName] = await sql`
       UPDATE users
       SET name=${name}
-      WHERE id=${id}
+      WHERE id=${userId}
       RETURNING *
   `;
   console.log(newName);
