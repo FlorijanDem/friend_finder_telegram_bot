@@ -3,9 +3,9 @@ import {
   handleStart,
   handleNameChange,
   handleMessage,
-  handleDescriptionChange
+  handleDescriptionChange,
 } from "./controllers/userController.ts";
-
+import { handleSearchByName } from "./controllers/searchController.ts";
 
 // /start command
 bot.onText(/\/start/, handleStart);
@@ -15,6 +15,9 @@ bot.onText(/\/name (.+)/, handleNameChange);
 
 // /description command
 bot.onText(/\/description (.+)/, handleDescriptionChange);
+
+// /searchByName command
+bot.onText(/\/searchByName (.+)/, handleSearchByName);
 
 // Handle button messages
 bot.on("message", handleMessage);
