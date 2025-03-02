@@ -50,4 +50,13 @@ const addName = async (userId, name) => {
   console.log(newName);
 };
 
-export { addToList, getUserInfo, addName };
+const addDescription = async (userId, description) => {
+  const [newDescription] = await sql`
+      UPDATE users
+      SET description=${description}
+      WHERE id=${userId}
+      RETURNING *
+  `;
+  console.log(newDescription)
+}
+export { addToList, getUserInfo, addName, addDescription };

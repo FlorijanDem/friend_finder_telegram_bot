@@ -1,6 +1,6 @@
 import { bot } from "../bot.ts";
 import TelegramBot from "node-telegram-bot-api";
-import { addToList, getUserInfo, addName } from "../models/userModel.ts";
+import { addToList, getUserInfo, addName, addDescription } from "../models/userModel.ts";
 const replyMarkup: TelegramBot.ReplyKeyboardMarkup = {
   keyboard: [[{ text: "addMeToTheList" }], [{ text: "aboutMe" }]],
 };
@@ -35,6 +35,30 @@ export const handleNameChange = async (
   await addName(userId, name);
   bot.sendMessage(msg.chat.id, `Now your name is ${name}`);
 };
+
+// Handle /description <description>
+export const handleDescriptionChange = async (
+  msg: TelegramBot.Message,
+  match: RegExpExecArray | null
+) => {
+  if (!match || !match[1]) {
+    bot.sendMessage(
+      msg.chat.id,
+      "Please enter your description after /description, e.g., /description Boy who love cats"
+    );
+    return;
+  }
+
+  const userId = msg.from?.id;
+  if (!userId) {
+    bot.sendMessage(msg.chat.id, "Error: Unable to get your user ID.");
+    return;
+  }
+
+  const description = match[1];
+  await addDescription(userId, description);
+  bot.sendMessage(msg.chat.id, `Now your name is ${description}`);
+}
 
 // Handle buttons like "addMeToTheList" and "aboutMe"
 export const handleMessage = async (msg: TelegramBot.Message) => {
