@@ -1,6 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
-import { testDBConnection } from "./dbConnection.ts";
-import { createTables } from "./createDB.ts";
+import { testDBConnection } from "./database/dbConnection.ts";
+import { createTables } from "./database/createDB.ts";
 import {
   addUserToList,
   userInfo,
@@ -45,7 +45,7 @@ bot.on("message", async (msg) => {
       if (typeof user.name === "string") {
         bot.sendMessage(chatId, `You are ${user.name}`);
       } else {
-        bot.sendMessage(chatId, "You do not have name")
+        bot.sendMessage(chatId, "You do not have name");
       }
     } else {
       console.error("No user array");

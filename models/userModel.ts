@@ -1,4 +1,4 @@
-import { sql } from "../dbConnection.ts";
+import { sql } from "../database/dbConnection.ts";
 
 const addToList = async (data) => {
   const id: number = data.data.userId;
