@@ -1,7 +1,11 @@
 import TelegramBot from "node-telegram-bot-api";
 import { testDBConnection } from "./dbConnection.ts";
 import { createTables } from "./createDB.ts";
-import { addUserToList } from "./controllers/userController.ts";
+import {
+  addUserToList,
+  userInfo,
+  setName,
+} from "./controllers/userController.ts";
 createTables();
 
 import * as dotenv from "dotenv";
@@ -23,15 +27,39 @@ bot.onText(/\/start/, (msg) => {
 });
 
 const replyMarkup: TelegramBot.ReplyKeyboardMarkup = {
-  keyboard: [[{ text: "addMeToTheList" }]],
+  keyboard: [[{ text: "addMeToTheList" }], [{ text: "aboutMe" }]],
 };
 
-bot.on("message", (msg) => {
+bot.on("message", async (msg) => {
   const chatId: number = msg.chat.id;
+  console.log(msg);
+  const userId = msg.from?.id;
 
   if (msg.text === "addMeToTheList") {
-    const userId = msg.from?.id;
     const addUser = addUserToList({ userId });
     bot.sendMessage(chatId, "You are added");
+  } else if (msg.text === "aboutMe") {
+    const user = await userInfo({ userId });
+    console.log(user);
+    if (user) {
+      if (typeof user.name === "string") {
+        bot.sendMessage(chatId, `You are ${user.name}`);
+      } else {
+        bot.sendMessage(chatId, "You do not have name")
+      }
+    } else {
+      console.error("No user array");
+    }
+  }
+});
+
+bot.onText(/\/name (.+)/, (msg, match) => {
+  if (match && match[1]) {
+    const userId = msg.from?.id;
+    const name = match[1];
+    const set = setName(userId, name);
+    bot.sendMessage(msg.chat.id, `Now you name is ${name}`);
+  } else {
+    bot.sendMessage(msg.chat.id, `Please enter you name`);
   }
 });

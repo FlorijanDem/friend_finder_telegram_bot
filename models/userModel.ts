@@ -40,15 +40,15 @@ const getUserInfo = async (data) => {
 };
 
 const addName = async (data) => {
-  const id: number = data.data.userId;
-  const name: string = data.data.name;
+  const id: number = data.userId;
+  const name: string = data.name;
   const [newName] = await sql`
-      INSERT INTO users (name)
-      VALUES (${name})
+      UPDATE users
+      SET name=${name}
       WHERE id=${id}
       RETURNING *
   `;
   console.log(newName);
 };
 
-export { addToList, getUserInfo };
+export { addToList, getUserInfo, addName };
